@@ -1,112 +1,105 @@
 # Alan Snow — Events Chef Portfolio
 
-A single-page dark luxe portfolio site for Alan Snow, a London-based events chef specialising in Moroccan heritage and modern European cuisine.
+A single-page portfolio site for Alan Snow, a London-based events chef specialising in
+Moroccan heritage and modern European cuisine, cooking for private dining, weddings and
+corporate events.
 
-**Live:** [alansnowcatering.com](https://alansnowcatering.com)  
-**Stack:** Cloudflare Pages (hosting) + Newsreader typeface + responsive dark theme with refined food photography
+**Live:** [alansnowcatering.com](https://alansnowcatering.com)
+**Stack:** Static HTML + CSS, hosted on Cloudflare Pages. No build process, no dependencies.
+**Theme:** Warm Mediterranean — sand, terracotta and olive, Fraunces + Outfit type, arched photo frames.
 
 ## File structure
 
 ```
-alan-snow-repo/
-├── index.html          # The complete site (all images inlined as base64)
-├── README.md           # This file
-└── .gitignore          # Prevents unwanted files from version control
+alan-snow-chef/
+├── index.html        # Page structure and copy
+├── css/
+│   └── styles.css    # All styling — colours live in the :root tokens at the top
+├── images/           # One file per photo slot (see ARTEFACTS.md for the shot list)
+│   ├── hero-tagine-mezze.jpg
+│   ├── alan-portrait.jpg          ← not yet present; see "The portrait slot" below
+│   ├── feature-grazing-table.jpg
+│   ├── dish-01-lamb-tagine.jpg
+│   ├── dish-02-dessert-canapes.jpg
+│   ├── dish-03-chocolate-raspberry-slice.jpg
+│   └── dish-04-petits-fours.jpg
+├── ARTEFACTS.md      # What to gather from Alan: shot list, story questions, proof assets
+├── QUICK_EDITS.md    # Find-and-replace guide for common text changes
+└── README.md         # This file
 ```
 
-## Editing the site
+## Swapping photos (the important workflow)
 
-`index.html` is a single, self-contained HTML file. All images, fonts, and CSS are embedded or loaded from CDN — no build process, no dependencies.
+The current photos are low-quality stand-ins awaiting the reshoot. Every photo is a
+plain file in `images/` — **to replace one, overwrite the file with the same name.**
+No HTML editing, no base64, no build step.
 
-**To edit locally:**
+1. Export the new photo as JPEG, ~1800 px on the long edge, 80–90% quality
+2. Name it exactly as the file it replaces (e.g. `dish-01-lamb-tagine.jpg`)
+3. Drop it into `images/`, overwriting the old one
+4. Commit and push — Cloudflare redeploys in ~30 seconds
 
-1. Clone this repo: `git clone https://github.com/YOUR_GITHUB_USERNAME/alan-snow-catering`
-2. Open `index.html` in your text editor (VS Code, Sublime, etc.)
-3. Find the text you want to change (e.g., `Snowalan@hotmail.co.uk`) and edit it directly
-4. Save. Reload the browser. Changes appear instantly.
+The full shot list with what each slot needs is in [ARTEFACTS.md](ARTEFACTS.md).
 
-**Common edits:**
+### The portrait slot
 
-- **Phone/email:** Search for `Snowalan@hotmail.co.uk` or `+44 7981 324369` in the file and replace
-- **Menu descriptions:** Search for dish names like "Lamb tagine" or "Petit fours" to find the copy
-- **Section text:** Search for "Alan Snow cooks the way he grew up eating" to find the about section
-- **Contact form link:** The CTA button links to `mailto:Snowalan@hotmail.co.uk` — update both the `href` and link text if needed
+The About section has a reserved slot for Alan's portrait in his new chef whites.
+Until `images/alan-portrait.jpg` exists, the site shows a styled "Portrait in the works"
+placeholder. **As soon as the file is added, the photo appears automatically** — no code
+change needed. Portrait orientation, roughly 3:4.
 
-Search (Ctrl+F / Cmd+F) rather than scrolling — the file is 3 MB and dense.
+## Editing text
+
+Open `index.html` and use Find (Ctrl+F / Cmd+F) — the file is now small and readable.
+Common edits (contact details, dish copy, section text) are catalogued in
+[QUICK_EDITS.md](QUICK_EDITS.md).
+
+## Editing colours / design
+
+All colours are CSS variables at the top of `css/styles.css`:
+
+```css
+--bg: #f5eddd;       /* warm sand background */
+--terra: #b34f2b;    /* terracotta accent */
+--olive: #67693f;    /* olive accent */
+...
+```
+
+Change a token there and it applies everywhere.
+
+## Testing locally
+
+Open `index.html` directly in a browser, or run a local server from the repo root:
+
+```
+python3 -m http.server 4173
+```
+
+then visit `http://localhost:4173`.
 
 ## Deploying to Cloudflare Pages
 
 ### One-time setup (5 min)
 
-1. **Create a Cloudflare account** at [dash.cloudflare.com](https://dash.cloudflare.com) with a payment card
-2. **Create a GitHub account** at [github.com](https://github.com) if you don't have one
-3. **Push this repo to GitHub:**
-   - On GitHub.com, create a new repository called `alan-snow-catering`
-   - Copy the repo URL
-   - In your terminal: `git remote add origin <paste-the-URL>`
-   - Then: `git push -u origin main`
+1. **Create a Cloudflare account** at [dash.cloudflare.com](https://dash.cloudflare.com)
+2. **Push this repo to GitHub** (create a repo, `git remote add origin <url>`, `git push -u origin main`)
+3. **In Cloudflare:** **Workers & Pages** → **Pages** → **Create application** → **Connect to Git**
+4. Select the repo. **Build settings:** leave blank. **Root directory:** `/`
+5. **Save and Deploy** — live in ~30 seconds
 
-### Deploy the site (5 min)
+Every push to `main` redeploys automatically.
 
-1. **In Cloudflare:** go to **Workers & Pages** → **Pages** → **Create application** → **Connect to Git**
-2. Select your GitHub account, then select the `alan-snow-catering` repo
-3. **Build settings:** leave blank (no build command needed)
-4. **Root directory:** `/` (default)
-5. Click **Save and Deploy** — the site is live in ~30 seconds
+### Custom domain
 
-Every time you push to `main` on GitHub, Cloudflare redeploys automatically.
+1. **Cloudflare** → **Domain Registration** → register `alansnowcatering.com` (~£8/yr)
+2. **Pages** → project → **Custom domains** → add `alansnowcatering.com` and `www.alansnowcatering.com`
+3. SSL provisions in ~5 min
 
-### Connect a custom domain
+### Branded email forwarding (optional)
 
-1. **In Cloudflare:** go to **Domain Registration** → **Register Domains** → search `alansnowcatering.com`
-2. Register it (costs ~£8/yr)
-3. Back in **Pages** → your `alan-snow-catering` project → **Custom domains** → add `alansnowcatering.com` and `www.alansnowcatering.com`
-4. Wait ~5 min for SSL to provision. Done.
-
-### Set up branded email forwarding (optional, 2 min)
-
-1. **In Cloudflare:** go to **Email** → **Email Routing**
-2. Add a rule: `hello@alansnowcatering.com` → forwards to `Snowalan@hotmail.co.uk`
-3. The contact form on the site now uses a branded address while mail lands in Alan's Hotmail
-
-## Making bigger changes
-
-**For significant rewrites** (new sections, layout changes, color shifts):
-
-- Edit `index.html` locally
-- Test in your browser (`open index.html` or drag into browser)
-- When it looks right, commit and push: `git add index.html && git commit -m "Update [what changed]" && git push`
-- Cloudflare rebuilds in ~30 seconds
-
-**For new photos:**
-The current version has all images embedded as base64 data URIs inside the HTML. If you want to swap images:
-
-1. Prepare a new image (JPEG, ideally 1800px max on the long edge, 80–90% quality)
-2. Convert to base64: there are free online tools like [base64.guru](https://base64.guru/tools/image-to-base64) or use command-line `base64 < image.jpg`
-3. Find the old base64 string in the HTML (search for `data:image/jpeg;base64,`) and replace it
-4. Alternatively, reach out and I can handle the image swap
-
-## Design notes
-
-**Typography:** Newsreader serif (display, italics, navigation) + Outfit sans (body)  
-**Theme:** Dark luxe restaurant aesthetic — near-black background, brass/gold accents, ~3.1 MB total (all self-contained)  
-**Responsive:** Works on phone, tablet, desktop without any build tools
-
-## Directory for other ventures
-
-Once Alan's site is live, the same setup works for Venture 2 and Venture 3:
-
-- New repo: `venture-2-site` (on GitHub)
-- New Pages project (in Cloudflare, linked to the new repo)
-- New domain: register `venture-2-domain.com` in Cloudflare Registrar
-- Same deployment pattern as above
-
-## Support & questions
-
-**Cloudflare Pages docs:** [pages.cloudflare.com](https://pages.cloudflare.com)  
-**Cloudflare Registrar docs:** [cloudflare.com/domain-registration](https://www.cloudflare.com/domain-registration/)
+**Cloudflare** → **Email** → **Email Routing** → rule:
+`hello@alansnowcatering.com` → forwards to `Snowalan@hotmail.co.uk`
 
 ---
 
-**Built:** 2026  
-**Last updated:** June 2026
+**Built:** 2026 · **Last overhauled:** June 2026 (restructured from a single 3 MB inline-image file; redesigned warm Mediterranean)
